@@ -11,7 +11,10 @@ module.exports = () => {
     mode: 'development',
     entry: {
       main: './src/js/index.js',
-      install: './src/js/install.js'
+      install: './src/js/install.js',
+      database: './src/js/database.js',
+      editor: './src/js/editor.js',
+      header: './src/js/header.js',
     },
     output: {
       filename: '[name].bundle.js',
@@ -19,31 +22,35 @@ module.exports = () => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: './src/index.html',
+        template: './index.html',
         filename: 'index.html',
         chunks: ['main'],
       }),
       new HtmlWebpackPlugin({
-        template: './src/install.html',
+        template: './js/install.html',
         filename: 'install.html',
         chunks: ['install'],
       }),
+      // Creates a manifest.json file.
       new WebpackPwaManifest({
-        name: 'Your Text Editor',
-        short_name: 'TextEditor',
-        description: 'A progressive web text editor',
-        background_color: '#ffffff',
-        theme_color: '#000000',
+        fingerprints: false,
+        inject: true,
+        name: 'Just Another Text Editor',
+        short_name: 'JATE',
+        description: 'Just another text editor',
+        background_color: '#225ca3',
+        theme_color: '#225ca3',
         start_url: '/',
+        publicPath: '/',
         icons: [
           {
-            src: path.resolve('src/img/icon.png'),
+            src: path.resolve('./src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
           },
         ],
       }),
       new InjectManifest({
-        swSrc: './src/service-worker.js',
+        swSrc: './src-sw.js',
         swDest: 'service-worker.js',
       }),
       
@@ -64,7 +71,8 @@ module.exports = () => {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/transform-runtime'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', 
+                        '@babel/transform-runtime'],
             },
           },
         },
