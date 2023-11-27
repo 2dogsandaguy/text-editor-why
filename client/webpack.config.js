@@ -11,10 +11,7 @@ module.exports = () => {
     mode: 'development',
     entry: {
       main: './src/js/index.js',
-      install: './src/js/install.js',
-      database: './src/js/database.js',
-      editor: './src/js/editor.js',
-      header: './src/js/header.js',
+      install: './src/js/install.js'
     },
     output: {
       filename: '[name].bundle.js',
@@ -24,12 +21,12 @@ module.exports = () => {
       new HtmlWebpackPlugin({
         template: './index.html',
         filename: 'index.html',
-        chunks: ['main'],
+        title: 'JATE',
       }),
-      new HtmlWebpackPlugin({
-        template: './js/install.html',
-        filename: 'install.html',
-        chunks: ['install'],
+      // Injects our custom servie worker
+      new InjectManifest({
+        swSrc: './src-sw.js',
+        swDest: 'src-sw.js',
       }),
       // Creates a manifest.json file.
       new WebpackPwaManifest({
@@ -46,12 +43,9 @@ module.exports = () => {
           {
             src: path.resolve('./src/images/logo.png'),
             sizes: [96, 128, 192, 256, 384, 512],
+            destination: path.join('assets', 'icons'),
           },
         ],
-      }),
-      new InjectManifest({
-        swSrc: './src-sw.js',
-        swDest: 'service-worker.js',
       }),
       
     ],
@@ -78,5 +72,6 @@ module.exports = () => {
         },
       ],
     },
+    
   };
 };
